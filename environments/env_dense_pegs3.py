@@ -14,6 +14,7 @@ import math
 from scipy import interpolate
 from scipy.optimize import curve_fit
 from mpl_toolkits.mplot3d import Axes3D
+from extra_functions_heat import hist2
 
 
 '''
@@ -912,24 +913,6 @@ def test_fraction(neib, bcg, mrad, binsf): #This test was done with background c
     
 #########################################################################################
 
-def hist2(zs,ks,zbins,kbins):
-    '''
-    Makes 2d histogram, returns array of dim len(zbins)xlen(kbins), and the central bin values
-    '''
-    kmids=(kbins[1:]+kbins[:-1])/2.
-    zmids=(zbins[1:]+zbins[:-1])/2.
-    buckets=np.zeros((len(zbins)-1,len(kbins)-1))
-    for i in range(len(zs)):
-        z,k=zs[i],ks[i]
-        for j in range(len(zbins)-1):
-            for n in range(len(kbins)-1):
-                if zbins[j]<z<zbins[j+1] and kbins[n]<k<kbins[n+1]:
-                    buckets[j,n]+=1
-    return(np.array([buckets,zmids,kmids]))
-
-
-
-#########################################################################################
     
 #########################################################################################
     
