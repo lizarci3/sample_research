@@ -19,6 +19,7 @@ from scipy import integrate
 from astropy.convolution import Gaussian1DKernel
 import os
 import datetime
+from extra_functions import hist, mf
 
 start=timeit.time.time()
 now = datetime.datetime.now()
@@ -92,46 +93,6 @@ def gausssian_for_point(massbin, schbin, sigksfunc):
     
     return(gauss2)
     
-def hist(xs,bins,weights):
-    '''
-    General histogram function, sqrt(n) errors
-    '''
-    buckets=np.zeros(len(bins)-1)
-    counts=np.ones(len(bins)-1)
-    for i in range(len(xs)):
-        for j in range(len(buckets)):
-            if bins[j]<xs[i]<bins[j+1]:
-                if weights[i]!=None:
-                    buckets[j]+=weights[i]
-                    counts[j]+=1.0 
-        if any(np.ma.getmask(np.ma.masked_invalid(buckets))):
-            print(i,xs[i])
-            return(None)
-    return(np.transpose(np.array([buckets,np.array(counts)])))
-    
-################################################################################    
-    
-def mf(mas,mblow,mbhigh,ws,width):
-    '''
-    Uses hist to sort the masses, mas, into buckets of width w in the range
-    mlow to mhigh. Computes sqrt(n) errors.
-    Returns a Xx3 array [center of mass bin, phi [ n/dex/Mpc^3], dphi] 
-    '''
-    
-
-    mstoplot,nstoplot,dnstoplot=[],[],[]
-    bins=np.arange(mblow,mbhigh+0.2,width)
-    mids=(bins[1:]+bins[:-1])/2.0
-    ns=hist(mas,bins,ws)
-    for n in ns:
-        nstoplot.append(n[0]/width)
-        dnstoplot.append((n[0]/width)*(1/math.sqrt(n[1])))
-    for b in mids:
-        mstoplot.append(b)
-    stuff=np.transpose(np.array([mstoplot,nstoplot,dnstoplot]))
-    #print(stuff)    
-    return(stuff)
-
 ################################################################################
 
 
